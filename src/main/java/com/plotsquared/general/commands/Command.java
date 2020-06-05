@@ -20,16 +20,7 @@ import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public abstract class Command {
 
@@ -286,7 +277,7 @@ public abstract class Command {
             return;
         }
         if (this.allCommands == null || this.allCommands.isEmpty()) {
-            player.sendMessage("Not Implemented: https://github.com/IntellectualSites/PlotSquared/issues/new");
+            player.sendMessage("Not Implemented: https://github.com/IntellectualSites/PlotSquared-Legacy/issues/new");
             return;
         }
         Command cmd = getCommand(args[0]);
@@ -461,6 +452,7 @@ public abstract class Command {
     }
 
     public String getCommandString() {
+        String base;
         if (this.parent == null) {
             return "/" + toString();
         } else {

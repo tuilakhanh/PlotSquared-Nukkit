@@ -35,6 +35,8 @@ import com.plotsquared.nukkit.util.block.NukkitLocalQueue;
 import com.plotsquared.nukkit.uuid.FileUUIDHandler;
 import com.plotsquared.nukkit.uuid.LowerOfflineUUIDWrapper;
 import com.sk89q.worldedit.WorldEdit;
+
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.*;
@@ -64,13 +66,20 @@ public final class NukkitMain extends PluginBase implements Listener, IPlotMain 
         return this.version;
     }
 
+
+    @Override
+    @Nonnull
+    public String getServerImplementation() {
+        return this.getServer().getVersion();
+    }
+
     @Override
     public void onEnable() {
         try {
             this.name = getDescription().getName();
             getServer().getName();
             new PS(this, "Nukkit");
-            Generator.addGenerator(NukkitHybridGen.class, getPluginName(), 2);
+            Generator.addGenerator(NukkitHybridGen.class, getPluginName(), 1);
             if (Settings.Enabled_Components.WORLDS) {
                 TaskManager.IMP.taskRepeat(new Runnable() {
                     @Override
@@ -89,6 +98,7 @@ public final class NukkitMain extends PluginBase implements Listener, IPlotMain 
         if (manager instanceof SinglePlotAreaManager) {
             long start = System.currentTimeMillis();
             SinglePlotArea area = ((SinglePlotAreaManager) manager).getArea();
+            Map<Integer, Level> worlds = getServer().getLevels();
             Level unload = null;
             for (Level world : getServer().getLevels().values()) {
                 String name = world.getName();
@@ -130,11 +140,15 @@ public final class NukkitMain extends PluginBase implements Listener, IPlotMain 
 
     @Override
     public void log(String message) {
-        message = C.color(message);
-        if (!Settings.Chat.CONSOLE_COLOR) {
-            message = message.replaceAll('\u00A7' + "[0-9]", "");
+        try {
+            message = C.color(message);
+            if (!Settings.Chat.CONSOLE_COLOR) {
+                message = message.replaceAll('\u00A7' + "[0-9]", "");
+            }
+            this.getServer().getConsoleSender().sendMessage(message);
+        } catch (Throwable ignored) {
+            System.out.println(ConsoleColors.fromString(message));
         }
-        this.getServer().getLogger().info(message);
     }
 
     @Override
@@ -152,7 +166,8 @@ public final class NukkitMain extends PluginBase implements Listener, IPlotMain 
         return new int[]{Integer.parseInt(split[0]), Integer.parseInt(split[1]), Integer.parseInt(split[2])};
     }
 
-    @Override public String getPluginVersionString() {
+    @Override
+    public String getPluginVersionString() {
         return getDescription().getVersion();
     }
 
@@ -163,7 +178,7 @@ public final class NukkitMain extends PluginBase implements Listener, IPlotMain 
 
     @Override
     public void registerCommands() {
-        NukkitCommand nukkitCommand = new NukkitCommand("plot", new String[] {"p","plot"});
+        NukkitCommand nukkitCommand = new NukkitCommand("plot", new String[]{"p", "plot", "ps", "plotsquared", "p2", "2"});
         getServer().getCommandMap().register("plot", nukkitCommand);
     }
 
@@ -234,14 +249,17 @@ public final class NukkitMain extends PluginBase implements Listener, IPlotMain 
 
     @Override
     public void registerInventoryEvents() {
+        PS.debug("Not implemented: registerPlotPlusEvents");
     }
 
     @Override
     public void registerPlotPlusEvents() {
+        PS.debug("Not implemented: registerPlotPlusEvents");
     }
 
     @Override
     public void registerForceFieldEvents() {
+        PS.debug("Not implemented: registerPlotPlusEvents");
     }
 
     @Override
@@ -270,7 +288,7 @@ public final class NukkitMain extends PluginBase implements Listener, IPlotMain 
 
     @Override
     public boolean initPlotMeConverter() {
-        return false;
+        return false; // No PlotMe for MCPE
     }
 
     @Override
@@ -290,7 +308,8 @@ public final class NukkitMain extends PluginBase implements Listener, IPlotMain 
                 map.put("generator", instance);
                 return new NukkitPlotGenerator(map);
             } catch (Throwable e) {
-                this.getServer().getLogger().error("Failed to create generator for " + name + " | " + gen);
+                this.getServer().getLogger()
+                        .error("Failed to create generator for " + name + " | " + gen);
                 while (e.getCause() != null) {
                     e = e.getCause();
                 }
@@ -337,6 +356,7 @@ public final class NukkitMain extends PluginBase implements Listener, IPlotMain 
 
     @Override
     public void registerChunkProcessor() {
+        PS.debug("Not implemented: registerChunkProcessor");
     }
 
     @Override
@@ -353,6 +373,7 @@ public final class NukkitMain extends PluginBase implements Listener, IPlotMain 
     public void setGenerator(String worldName) {
         Level world = getServer().getLevelByName(worldName);
         if (world == null) {
+            // create world
             ConfigurationSection worldConfig = PS.get().worlds.getConfigurationSection("worlds." + worldName);
             String manager = worldConfig.getString("generator.plugin", getPluginName());
             SetupObject setup = new SetupObject();
@@ -388,8 +409,8 @@ public final class NukkitMain extends PluginBase implements Listener, IPlotMain 
 
     private void setGenerator(Level level, Generator generator) {
         try {
-            Field fieldClass = Level.class.getDeclaredField("generatorClass");
-            Field fieldInstance = Level.class.getDeclaredField("generators");
+            Field fieldClass = Level.class.getDeclaredField("generators");
+            Field fieldInstance = Level.class.getDeclaredField("generatorClass");
             fieldClass.setAccessible(true);
             fieldInstance.setAccessible(true);
             fieldClass.set(level, generator.getClass());

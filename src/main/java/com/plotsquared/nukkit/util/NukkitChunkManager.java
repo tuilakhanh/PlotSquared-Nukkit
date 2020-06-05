@@ -1,6 +1,7 @@
 package com.plotsquared.nukkit.util;
 
 
+import com.intellectualcrafters.plot.PS;
 import com.intellectualcrafters.plot.object.ChunkLoc;
 import com.intellectualcrafters.plot.object.Location;
 import com.intellectualcrafters.plot.object.Plot;
@@ -8,6 +9,7 @@ import com.intellectualcrafters.plot.util.ChunkManager;
 
 public class NukkitChunkManager extends ChunkManager {
     public NukkitChunkManager() {
+        PS.debug("Not implemented: NukkitChunkManager");
     }
 
     @Override
@@ -22,6 +24,7 @@ public class NukkitChunkManager extends ChunkManager {
 
     @Override
     public void unloadChunk(String world, ChunkLoc loc, boolean save, boolean safe) {
+
     }
 
     @Override
@@ -36,6 +39,7 @@ public class NukkitChunkManager extends ChunkManager {
 
     @Override
     public void clearAllEntities(Location pos1, Location pos2) {
+
     }
 
     @Override

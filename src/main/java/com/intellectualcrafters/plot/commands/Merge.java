@@ -75,7 +75,7 @@ public class Merge extends SubCommand {
         Expression<Double> priceExr = plotArea.PRICES.containsKey("merge") ? plotArea.PRICES.get("merge") : null;
         final int size = plot.getConnectedPlots().size();
         final double price = priceExr == null ? 0d : priceExr.evaluate((double) size);
-        if (EconHandler.manager != null && plotArea.USE_ECONOMY && price > 0d && EconHandler.manager.getMoney(player) < price) {
+        if (EconHandler.getEconHandler() != null && plotArea.USE_ECONOMY && price > 0d && EconHandler.getEconHandler().getMoney(player) < price) {
             sendMessage(player, C.CANNOT_AFFORD_MERGE, String.valueOf(price));
             return false;
         }
@@ -102,13 +102,18 @@ public class Merge extends SubCommand {
             }
         } else {
             if ("all".equalsIgnoreCase(args[0]) || "auto".equalsIgnoreCase(args[0])) {
-                boolean terrain = true;
-                if (args.length == 2) {
-                    terrain = "true".equalsIgnoreCase(args[1]);
+                boolean terrain = args.length == 2
+                        ? Boolean.valueOf(args[1])
+                        : true;
+
+                if(!terrain && !Permissions.hasPermission(player, C.PERMISSION_MERGE_KEEPROAD)) {
+                    MainUtil.sendMessage(player, C.NO_PERMISSION, C.PERMISSION_MERGE_KEEPROAD.s());
+                    return true;
                 }
+
                 if (plot.autoMerge(-1, maxSize, uuid, terrain)) {
-                    if (EconHandler.manager != null && plotArea.USE_ECONOMY && price > 0d) {
-                        EconHandler.manager.withdrawMoney(player, price);
+                    if (EconHandler.getEconHandler() != null && plotArea.USE_ECONOMY && price > 0d) {
+                        EconHandler.getEconHandler().withdrawMoney(player, price);
                         sendMessage(player, C.REMOVED_BALANCE, String.valueOf(price));
                     }
                     MainUtil.sendMessage(player, C.SUCCESS_MERGE);
@@ -130,15 +135,19 @@ public class Merge extends SubCommand {
             MainUtil.sendMessage(player, C.DIRECTION.s().replaceAll("%dir%", direction(loc.getYaw())));
             return false;
         }
-        final boolean terrain;
-        if (args.length == 2) {
-            terrain = "true".equalsIgnoreCase(args[1]);
-        } else {
-            terrain = true;
+
+        final boolean terrain = args.length == 2
+                ? Boolean.valueOf(args[1])
+                : true;
+
+        if(!terrain && !Permissions.hasPermission(player, C.PERMISSION_MERGE_KEEPROAD)) {
+            MainUtil.sendMessage(player, C.NO_PERMISSION, C.PERMISSION_MERGE_KEEPROAD.s());
+            return true;
         }
+
         if (plot.autoMerge(direction, maxSize - size, uuid, terrain)) {
-            if (EconHandler.manager != null && plotArea.USE_ECONOMY && price > 0d) {
-                EconHandler.manager.withdrawMoney(player, price);
+            if (EconHandler.getEconHandler() != null && plotArea.USE_ECONOMY && price > 0d) {
+                EconHandler.getEconHandler().withdrawMoney(player, price);
                 sendMessage(player, C.REMOVED_BALANCE, String.valueOf(price));
             }
             MainUtil.sendMessage(player, C.SUCCESS_MERGE);
@@ -172,12 +181,12 @@ public class Merge extends SubCommand {
                         sendMessage(accepter, C.MERGE_NOT_VALID);
                         return;
                     }
-                    if (EconHandler.manager != null && plotArea.USE_ECONOMY && price > 0d) {
-                        if (EconHandler.manager.getMoney(player) < price) {
+                    if (EconHandler.getEconHandler() != null && plotArea.USE_ECONOMY && price > 0d) {
+                        if (EconHandler.getEconHandler().getMoney(player) < price) {
                             sendMessage(player, C.CANNOT_AFFORD_MERGE, String.valueOf(price));
                             return;
                         }
-                        EconHandler.manager.withdrawMoney(player, price);
+                        EconHandler.getEconHandler().withdrawMoney(player, price);
                         sendMessage(player, C.REMOVED_BALANCE, String.valueOf(price));
                     }
                     MainUtil.sendMessage(player, C.SUCCESS_MERGE);

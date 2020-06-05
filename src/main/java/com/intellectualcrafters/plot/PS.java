@@ -111,7 +111,7 @@ public class PS {
     public YamlConfiguration worlds;
     public YamlConfiguration storage;
     public YamlConfiguration commands;
-     // Temporary hold the plots/clusters before the worlds load
+    // Temporary hold the plots/clusters before the worlds load
     public HashMap<String, Set<PlotCluster>> clusters_tmp;
     public HashMap<String, HashMap<PlotId, Plot>> plots_tmp;
 
@@ -1888,7 +1888,7 @@ public class PS {
             return null;
         }
     }
-    
+
     /**
      * Get Plots based on alias
      *
@@ -1898,17 +1898,17 @@ public class PS {
      * @return Set<{@link Plot}> empty if nothing found
      */
     public Set<Plot> getPlotsByAlias(String alias, String worldname) {
-    	Set<Plot> result = new HashSet<>();
-    	
-    	if (alias != null) {
-    		for (Plot plot : getPlots()) {
-    			if (alias.equals(plot.getAlias()) && (worldname == null || worldname.equals(plot.getWorldName()))) {    				
-    				result.add(plot);    				
-    			}
-    		}
-    	}
-    	
-    	return result;
+        Set<Plot> result = new HashSet<>();
+
+        if (alias != null) {
+            for (Plot plot : getPlots()) {
+                if (alias.equals(plot.getAlias()) && (worldname == null || worldname.equals(plot.getWorldName()))) {
+                    result.add(plot);
+                }
+            }
+        }
+
+        return result;
     }
 
     public Set<PlotArea> getPlotAreas(String world, RegionWrapper region) {

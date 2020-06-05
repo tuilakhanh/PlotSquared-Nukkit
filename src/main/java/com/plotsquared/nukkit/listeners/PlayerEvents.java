@@ -13,7 +13,7 @@ import cn.nukkit.entity.item.EntityPotion;
 import cn.nukkit.entity.item.EntityVehicle;
 import cn.nukkit.entity.mob.EntityMob;
 import cn.nukkit.entity.passive.EntityAnimal;
-import cn.nukkit.entity.EntityTameable;
+import cn.nukkit.entity.passive.EntityTameable;
 import cn.nukkit.entity.passive.EntityWaterAnimal;
 import cn.nukkit.entity.projectile.EntityProjectile;
 import cn.nukkit.event.Cancellable;
@@ -21,34 +21,10 @@ import cn.nukkit.event.Event;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
-import cn.nukkit.event.block.BlockBreakEvent;
-import cn.nukkit.event.block.BlockBurnEvent;
-import cn.nukkit.event.block.BlockFormEvent;
-import cn.nukkit.event.block.BlockGrowEvent;
-import cn.nukkit.event.block.BlockPlaceEvent;
-import cn.nukkit.event.block.BlockSpreadEvent;
-import cn.nukkit.event.block.BlockUpdateEvent;
-import cn.nukkit.event.entity.EntityBlockChangeEvent;
-import cn.nukkit.event.entity.EntityCombustByEntityEvent;
-import cn.nukkit.event.entity.EntityCombustEvent;
-import cn.nukkit.event.entity.EntityDamageByEntityEvent;
-import cn.nukkit.event.entity.EntityDamageEvent;
-import cn.nukkit.event.entity.EntityExplodeEvent;
-import cn.nukkit.event.entity.EntitySpawnEvent;
-import cn.nukkit.event.entity.ExplosionPrimeEvent;
-import cn.nukkit.event.entity.ProjectileHitEvent;
-import cn.nukkit.event.entity.ProjectileLaunchEvent;
+import cn.nukkit.event.block.*;
+import cn.nukkit.event.entity.*;
 import cn.nukkit.event.inventory.InventoryCloseEvent;
-import cn.nukkit.event.player.PlayerBucketEmptyEvent;
-import cn.nukkit.event.player.PlayerBucketFillEvent;
-import cn.nukkit.event.player.PlayerChatEvent;
-import cn.nukkit.event.player.PlayerCommandPreprocessEvent;
-import cn.nukkit.event.player.PlayerInteractEvent;
-import cn.nukkit.event.player.PlayerJoinEvent;
-import cn.nukkit.event.player.PlayerMoveEvent;
-import cn.nukkit.event.player.PlayerQuitEvent;
-import cn.nukkit.event.player.PlayerRespawnEvent;
-import cn.nukkit.event.player.PlayerTeleportEvent;
+import cn.nukkit.event.player.*;
 import cn.nukkit.event.potion.PotionCollideEvent;
 import cn.nukkit.event.redstone.RedstoneUpdateEvent;
 import cn.nukkit.metadata.MetadataValue;
@@ -59,23 +35,12 @@ import com.intellectualcrafters.plot.config.C;
 import com.intellectualcrafters.plot.config.Settings;
 import com.intellectualcrafters.plot.flag.Flags;
 import com.intellectualcrafters.plot.flag.IntegerFlag;
-import com.intellectualcrafters.plot.object.Location;
-import com.intellectualcrafters.plot.object.Plot;
-import com.intellectualcrafters.plot.object.PlotArea;
-import com.intellectualcrafters.plot.object.PlotBlock;
-import com.intellectualcrafters.plot.object.PlotId;
-import com.intellectualcrafters.plot.object.PlotPlayer;
-import com.intellectualcrafters.plot.object.StringWrapper;
-import com.intellectualcrafters.plot.util.EventUtil;
-import com.intellectualcrafters.plot.util.MainUtil;
-import com.intellectualcrafters.plot.util.MathMan;
-import com.intellectualcrafters.plot.util.Permissions;
-import com.intellectualcrafters.plot.util.RegExUtil;
-import com.intellectualcrafters.plot.util.TaskManager;
-import com.intellectualcrafters.plot.util.UUIDHandler;
+import com.intellectualcrafters.plot.object.*;
+import com.intellectualcrafters.plot.util.*;
 import com.plotsquared.listener.PlotListener;
 import com.plotsquared.nukkit.object.NukkitPlayer;
 import com.plotsquared.nukkit.util.NukkitUtil;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -87,10 +52,10 @@ import java.util.regex.Pattern;
 
 public class PlayerEvents extends PlotListener implements Listener {
 
+    private boolean pistonBlocks = true;
     // To prevent recursion
     private boolean tmpTeleport = true;
 
-    // TODO fix this
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onPhysicsEvent(BlockUpdateEvent event) {
         if (event instanceof RedstoneUpdateEvent) {
@@ -235,6 +200,7 @@ public class PlayerEvents extends PlotListener implements Listener {
         if (msg.isEmpty()) {
             return;
         }
+        String[] split = msg.split(" ");
         Player player = event.getPlayer();
         PlotPlayer pp = NukkitUtil.getPlayer(player);
         Plot plot = pp.getCurrentPlot();
@@ -299,6 +265,7 @@ public class PlayerEvents extends PlotListener implements Listener {
                 EventUtil.manager.doJoinTask(pp);
             }
         }, 20);
+
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -551,8 +518,11 @@ public class PlayerEvents extends PlotListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOW)
     public void onChat(PlayerChatEvent event) {
+        if (event.isCancelled())
+            return;
+
         PlotPlayer plotPlayer = NukkitUtil.getPlayer(event.getPlayer());
         Location location = plotPlayer.getLocation();
         PlotArea area = location.getPlotArea();
@@ -1014,7 +984,6 @@ public class PlayerEvents extends PlotListener implements Listener {
         Plot plot = location.getOwnedPlot();
         if (plot == null || !plot.getFlag(Flags.BLOCK_BURN, false)) {
             event.setCancelled(true);
-            return;
         }
 
     }
@@ -1022,7 +991,7 @@ public class PlayerEvents extends PlotListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onBucketEmpty(PlayerBucketEmptyEvent event) {
         Block b;
-        if (event.getBlockFace() == null) { // Cauldron
+        if (event.getBlockFace() == null) {
             b = event.getBlockClicked();
         } else {
             b = event.getBlockClicked().getSide(event.getBlockFace());
@@ -1135,7 +1104,6 @@ public class PlayerEvents extends PlotListener implements Listener {
         }
         if (shooter == null) {
             kill(entity, event);
-            return;
         }
     }
 
@@ -1161,7 +1129,7 @@ public class PlayerEvents extends PlotListener implements Listener {
             stub = "road";
         } else {
             // Prioritize plots for close to seamless pvp zones
-            if (victim.age > damager.age) {
+            if (victim.ticksLived > damager.ticksLived) {
                 if (dplot == null || !(victim instanceof Player)) {
                     if (vplot == null) {
                         plot = dplot;

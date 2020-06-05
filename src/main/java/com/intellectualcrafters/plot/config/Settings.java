@@ -14,22 +14,12 @@ public class Settings extends Config {
     NOTE: Fields are saved in declaration order, classes in reverse order
      */
 
-    @Comment("These first 4 aren't configurable") // This is a comment
-    @Final // Indicates that this value isn't configurable
-    public static final String ISSUES = "Please report issues of this build for PetteriM1";
+    @Comment("These first value is not configurable") // This is a comment
     @Final
-    public static final String WIKI = "https://github.com/IntellectualSites/PlotSquared/wiki";
-    @Final
-    public static String DATE = "null"; // These values are set from P2 before loading
-    @Final
-    public static String BUILD = "Custom"; // These values are set from P2 before loading
-    @Final
-    public static String COMMIT = "null"; // These values are set from P2 before loading
-    @Final
-    public static String PLATFORM = "Nukkit"; // These values are set from P2 before loading
+    public static String PLATFORM; // These values are set from P2 before loading
 
     @Comment("Show additional information in console")
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
     @Comment({"The big annoying text that appears when you enter a plot", "For a single plot: `/plot flag set titles false`", "For just you: `/plot toggle titles`"})
     public static boolean TITLES = true;
 
@@ -160,7 +150,7 @@ public class Settings extends Config {
         public List<String> WORLDS = new ArrayList<>(Collections.singletonList("*"));
 
 
-        @Comment("See: https://github.com/IntellectualSites/PlotSquared/wiki/Plot-analysis")
+        @Comment("See: https://github.com/IntellectualSites/PlotSquared-Legacy/wiki/Plot-analysis")
         public static final class CALIBRATION {
             public int VARIETY = 0;
             public int VARIETY_SD = 0;
@@ -196,6 +186,17 @@ public class Settings extends Config {
         @Ignore
         public static boolean NATIVE_UUID_PROVIDER = false;
     }
+    
+    @Comment("General settings") public static final class General {
+        @Comment("Display scientific numbers (4.2E8)") public static boolean SCIENTIFIC = false;
+        @Comment("Replace wall when merging") public static boolean MERGE_REPLACE_WALL = true;
+    }
+
+    @Comment("Schematic Settings") public static final class Schematics {
+        @Comment("Whether schematic based generation should paste schematic on top of plots, or from Y=1")
+        public static boolean PASTE_ON_TOP = true;
+    }
+
 
     @Comment("Configure the paths that will be used")
     public static final class Paths {
@@ -213,7 +214,7 @@ public class Settings extends Config {
                 " - Downloads can be deleted by the user",
                 " - Supports plot uploads, downloads and saves",
         })
-        public static String URL = "https://empcraft.com/plots/";
+        public static String URL = "https://athion.net/plots";
         @Comment({
                 "The web interface for assets",
                 " - All schematics are organized and public",
@@ -283,6 +284,8 @@ public class Settings extends Config {
     public static final class Claim {
         @Comment("The max plots claimed in a single `/plot auto <size>` command")
         public static int MAX_AUTO_AREA = 4;
+        @Comment("Teleport upon claiming a plot")
+        public static boolean TELEPORT_ON_CLAIM = true;
     }
 
     public static final class Ratings {
@@ -331,5 +334,8 @@ public class Settings extends Config {
         public static boolean DATABASE_PURGER = false;
         @Comment("Delete plots when a player is banned")
         public static boolean BAN_DELETER = false;
+        @Comment({"Disable FAWE optimizations for P2",
+            "  !!Do not set to true if using P2 worlds and instructed to do so"})
+        public static boolean DISABLE_FAWE_OPTIMIZATION = false;
     }
 }

@@ -18,6 +18,7 @@ import com.intellectualcrafters.plot.util.MainUtil;
 import com.intellectualcrafters.plot.util.block.ScopedLocalBlockQueue;
 import com.plotsquared.nukkit.util.NukkitUtil;
 import com.plotsquared.nukkit.util.block.NukkitWrappedChunk;
+
 import java.util.Map;
 
 public class NukkitPlotGenerator extends Generator implements GeneratorWrapper<Generator> {
@@ -167,7 +168,7 @@ public class NukkitPlotGenerator extends Generator implements GeneratorWrapper<G
                 this.plotGenerator.generateChunk(this.chunkSetter, area, this.random);
             } catch (Throwable e) {
                 // Recover from generator error
-                // e.printStackTrace(); //TODO: there is an error?
+                e.printStackTrace();
             }
             ChunkManager.postProcessChunk(chunkSetter);
         }
@@ -177,7 +178,8 @@ public class NukkitPlotGenerator extends Generator implements GeneratorWrapper<G
     public void populateChunk(int x, int z) {
         if (getPlatformGenerator() != this) {
             getPlatformGenerator().populateChunk(x, z);
-        }
+        }  // No populating
+
     }
 
     @Override

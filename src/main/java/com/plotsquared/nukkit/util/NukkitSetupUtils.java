@@ -12,6 +12,7 @@ import com.intellectualcrafters.plot.util.SetupUtils;
 import com.plotsquared.nukkit.NukkitMain;
 import com.plotsquared.nukkit.generator.NukkitPlotGenerator;
 import com.plotsquared.nukkit.util.block.NukkitHybridGen;
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -126,16 +127,6 @@ public class NukkitSetupUtils extends SetupUtils {
             map.put("plot-generator", PS.get().IMP.getDefaultGenerator());
             if (!plugin.getServer().generateLevel(object.world, object.world.hashCode(), NukkitHybridGen.class, map)) {
                 plugin.getServer().loadLevel(object.world);
-            }
-            try {
-//                File nukkitFile = new File("nukkit.yml");
-//                YamlConfiguration nukkitYml = YamlConfiguration.loadConfiguration(nukkitFile);
-//                if (!nukkitYml.contains("worlds." + object.world + ".generator")) {
-//                    nukkitYml.set("worlds." + object.world + ".generator", object.setupGenerator);
-//                    nukkitYml.save(nukkitFile);
-//                }
-            } catch (Throwable e) {
-                e.printStackTrace();
             }
         } else {
             if (!plugin.getServer().generateLevel(object.world, object.world.hashCode())) {

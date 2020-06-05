@@ -17,13 +17,16 @@ import com.plotsquared.general.commands.CommandDeclaration;
 @CommandDeclaration(
         command = "delete",
         permission = "plots.delete",
-        description = "Delete a plot",
+        description = "Delete the plot you stand on",
         usage = "/plot delete",
-        aliases = {"dispose", "del", "reset"},
+        aliases = {"dispose", "del"},
         category = CommandCategory.CLAIMING,
         requiredType = RequiredType.NONE,
         confirmation = true)
 public class Delete extends SubCommand {
+
+    // Note: To delete a specific plot use /plot <plot> delete
+    // The syntax also works with any command: /plot <plot> <command>
 
     @Override
     public boolean onCommand(final PlotPlayer player, String[] args) {
@@ -54,11 +57,11 @@ public class Delete extends SubCommand {
                     @Override
                     public void run() {
                         plot.removeRunning();
-                        if ((EconHandler.manager != null) && plotArea.USE_ECONOMY) {
+                        if ((EconHandler.getEconHandler() != null) && plotArea.USE_ECONOMY) {
                             Expression<Double> valueExr = plotArea.PRICES.get("sell");
                             double value = plots.size() * valueExr.evaluate((double) currentPlots);
                             if (value > 0d) {
-                                EconHandler.manager.depositMoney(player, value);
+                                EconHandler.getEconHandler().depositMoney(player, value);
                                 sendMessage(player, C.ADDED_BALANCE, String.valueOf(value));
                             }
                         }

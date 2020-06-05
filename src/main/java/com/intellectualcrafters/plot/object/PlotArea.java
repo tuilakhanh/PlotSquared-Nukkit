@@ -2,6 +2,7 @@ package com.intellectualcrafters.plot.object;
 
 import com.intellectualcrafters.configuration.ConfigurationSection;
 import com.intellectualcrafters.plot.PS;
+import com.intellectualcrafters.plot.config.C;
 import com.intellectualcrafters.plot.config.Configuration;
 import com.intellectualcrafters.plot.config.ConfigurationNode;
 import com.intellectualcrafters.plot.config.Settings;
@@ -10,28 +11,15 @@ import com.intellectualcrafters.plot.flag.FlagManager;
 import com.intellectualcrafters.plot.flag.Flags;
 import com.intellectualcrafters.plot.generator.GridPlotWorld;
 import com.intellectualcrafters.plot.generator.IndependentPlotGenerator;
-import com.intellectualcrafters.plot.util.EconHandler;
-import com.intellectualcrafters.plot.util.EventUtil;
-import com.intellectualcrafters.plot.util.MainUtil;
-import com.intellectualcrafters.plot.util.MathMan;
-import com.intellectualcrafters.plot.util.PlotGameMode;
-import com.intellectualcrafters.plot.util.StringMan;
+import com.intellectualcrafters.plot.util.*;
 import com.intellectualcrafters.plot.util.area.QuadMap;
 import com.intellectualcrafters.plot.util.block.GlobalBlockQueue;
 import com.intellectualcrafters.plot.util.block.LocalBlockQueue;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+
 import javax.annotation.Nullable;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Jesse Boyd
@@ -228,7 +216,7 @@ public abstract class PlotArea {
         this.SCHEMATIC_FILE = config.getString("schematic.file");
         this.SCHEMATIC_CLAIM_SPECIFY = config.getBoolean("schematic.specify_on_claim");
         this.SCHEMATICS = config.getStringList("schematic.schematics");
-        this.USE_ECONOMY = config.getBoolean("economy.use") && EconHandler.getEconHandler() != null;
+        this.USE_ECONOMY = config.getBoolean("economy.use");
         ConfigurationSection priceSection = config.getConfigurationSection("economy.prices");
         if (this.USE_ECONOMY) {
             this.PRICES = new HashMap<>();
@@ -236,6 +224,13 @@ public abstract class PlotArea {
                 this.PRICES.put(key, Expression.doubleExpression(priceSection.getString(key)));
             }
         }
+
+        if (this.USE_ECONOMY) {
+            PS.debug(C.PREFIX + "&3 - economy enabled: &7true");
+        } else {
+            PS.debug(C.PREFIX + "&3 - economy enabled: &7false");
+        }
+
         this.PLOT_CHAT = config.getBoolean("chat.enabled");
         this.WORLD_BORDER = config.getBoolean("world.border");
         this.MAX_BUILD_HEIGHT = config.getInt("world.max_height");
@@ -283,8 +278,7 @@ public abstract class PlotArea {
             this.DEFAULT_HOME = new PlotLoc(Integer.MAX_VALUE, Integer.MAX_VALUE);
         } else {
             try {
-                String[] split = homeDefault.split(",");
-                this.DEFAULT_HOME = new PlotLoc(Integer.parseInt(split[0]), Integer.parseInt(split[1]));
+                this.DEFAULT_HOME = PlotLoc.fromString(homeDefault);
             } catch (NumberFormatException ignored) {
                 this.DEFAULT_HOME = null;
             }
@@ -831,7 +825,7 @@ public abstract class PlotArea {
         PlotId pos2 = plotIds.get(plotIds.size() - 1);
         PlotManager manager = getPlotManager();
 
-        boolean result = EventUtil.manager.callMerge(getPlotAbs(pos1), plotIds);
+        boolean result = EventUtil.manager.callAutoMerge(getPlotAbs(pos1), plotIds);
         if (!result) {
             return false;
         }
@@ -848,6 +842,9 @@ public abstract class PlotArea {
                 trusted.addAll(plot.getTrusted());
                 members.addAll(plot.getMembers());
                 denied.addAll(plot.getDenied());
+                if (removeRoads) {
+                    plot.removeSign();
+                }
             }
         }
         members.removeAll(trusted);

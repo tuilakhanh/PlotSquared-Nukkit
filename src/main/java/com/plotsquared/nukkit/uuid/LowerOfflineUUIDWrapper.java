@@ -4,6 +4,7 @@ import com.google.common.base.Charsets;
 import com.intellectualcrafters.plot.object.OfflinePlotPlayer;
 import com.intellectualcrafters.plot.object.PlotPlayer;
 import com.intellectualcrafters.plot.uuid.UUIDWrapper;
+
 import java.util.UUID;
 
 public class LowerOfflineUUIDWrapper extends UUIDWrapper {
@@ -37,4 +38,5 @@ public class LowerOfflineUUIDWrapper extends UUIDWrapper {
     public OfflinePlotPlayer[] getOfflinePlayers() {
         return new OfflinePlotPlayer[0];
     }
+
 }

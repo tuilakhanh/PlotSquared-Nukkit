@@ -7,7 +7,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <artifactId>PlotSquared</artifactId>
-  <version>3.5.1-CUSTOM</version>
+  <version>3.5.1</version>
   <name>PlotSquared</name>
   <packaging>jar</packaging>
   <build>
@@ -54,25 +54,35 @@
   </build>
   <repositories>
     <repository>
+      <id>my-alternate-repository</id>
+      <url>http://myrepo.net/repo</url>
+    </repository>
+    <repository>
+      <id>jitpack.io</id>
+      <url>https://jitpack.io</url>
+    </repository>
+    <repository>
       <id>sk80q</id>
       <url>http://maven.sk89q.com/artifactory/repo/</url>
     </repository>
   </repositories>
   <dependencies>
     <dependency>
+      <groupId>org.jetbrains</groupId>
+      <artifactId>annotations</artifactId>
+      <version>16.0.2</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.GameModsBR</groupId>
+      <artifactId>PowerNukkit</artifactId>
+      <version>v1.2.0.2-PN</version>
+    </dependency>
+    <dependency>
       <groupId>com.sk89q</groupId>
       <artifactId>worldedit</artifactId>
       <version>6.0.0-SNAPSHOT</version>
       <type>jar</type>
       <scope>compile</scope>
-    </dependency>
-    <dependency>
-      <groupId>cn.nukkit</groupId>
-      <artifactId>Nukkit</artifactId>
-      <version>SuomiCraftPE</version>
-      <optional>false</optional>
-      <scope>system</scope>
-      <systemPath>${basedir}/lib/Nukkit-PM1E.jar</systemPath>
     </dependency>
   </dependencies>
 </project>

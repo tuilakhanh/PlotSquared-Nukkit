@@ -14,7 +14,6 @@ import com.plotsquared.general.commands.CommandDeclaration;
         usage = "/plot move <X;Z>",
         command = "move",
         description = "Move a plot",
-        aliases = {"debugmove"},
         permission = "plots.move",
         category = CommandCategory.CLAIMING,
         requiredType = RequiredType.NONE)

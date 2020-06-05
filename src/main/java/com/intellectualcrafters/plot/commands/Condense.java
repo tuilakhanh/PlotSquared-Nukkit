@@ -111,15 +111,16 @@ public class Condense extends SubCommand {
                     return false;
                 }
                 MainUtil.sendMessage(player, "TASK STARTED...");
-                Runnable run = new Runnable() {
-                    @Override
-                    public void run() {
+                Condense.TASK = true;
+                TaskManager.runTaskAsync(new Runnable() {
+                    @Override public void run() {
                         if (!Condense.TASK) {
                             MainUtil.sendMessage(player, "TASK CANCELLED.");
                         }
                         if (allPlots.isEmpty()) {
                             Condense.TASK = false;
-                            MainUtil.sendMessage(player, "TASK COMPLETE. PLEASE VERIFY THAT NO NEW PLOTS HAVE BEEN CLAIMED DURING TASK.");
+                            MainUtil.sendMessage(player,
+                                "TASK COMPLETE. PLEASE VERIFY THAT NO NEW PLOTS HAVE BEEN CLAIMED DURING TASK.");
                             return;
                         }
                         final Runnable task = this;
@@ -155,9 +156,7 @@ public class Condense extends SubCommand {
                             MainUtil.sendMessage(player, "SKIPPING COMPLEX PLOT: " + origin);
                         }
                     }
-                };
-                Condense.TASK = true;
-                TaskManager.runTaskAsync(run);
+                });
                 return true;
             }
             case "stop":

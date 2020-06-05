@@ -48,6 +48,7 @@ public enum C {
      */
     PERMISSION_STAR("*", "static.permissions"),
     PERMISSION_ADMIN("plots.admin", "static.permissions"),
+    PERMISSION_ADMIN_SUDO_AREA("plots.admin.area.sudo", "static.permissions"),
     PERMISSION_PROJECTILE_UNOWNED("plots.projectile.unowned", "static.permissions"),
     PERMISSION_PROJECTILE_OTHER("plots.projectile.other", "static.permissions"),
     PERMISSION_ADMIN_INTERACT_BLOCKED_CMDS("plots.admin.interact.blockedcommands", "static.permissions"),
@@ -59,6 +60,7 @@ public enum C {
     PERMISSION_ADMIN_ENTRY_FORCEFIELD("plots.admin.entry.forcefield", "static.permissions"),
     PERMISSION_COMMANDS_CHAT("plots.admin.command.chat", "static.permissions"),
     PERMISSION_MERGE_OTHER("plots.merge.other", "static.permissions"),
+    PERMISSION_MERGE_KEEPROAD("plots.merge.keeproad", "static.permissions"),
     PERMISSION_ADMIN_DESTROY_UNOWNED("plots.admin.destroy.unowned", "static.permissions"),
     PERMISSION_ADMIN_DESTROY_GROUNDLEVEL("plots.admin.destroy.groundlevel", "static.permissions"),
     PERMISSION_ADMIN_DESTROY_OTHER("plots.admin.destroy.other", "static.permissions"),
@@ -150,7 +152,7 @@ public enum C {
     PERMISSION_ADMIN_COMMAND_SCHEMATIC_SAVE("plots.admin.command.schematic.save", "static.permissions"),
     PERMISSION_SET_COMPONENT("plots.set.%s0", "static.permissions"),
     PERMISSION_ADMIN_COMMAND("plots.admin.command.%s0", "static.permissions"),
-    PERMISSION_ADMIN_COMMAND_UNLINK("", "static.permissions"),
+    PERMISSION_ADMIN_COMMAND_UNLINK("plots.admin.command.unlink", "static.permissions"),
     PERMISSION_VISIT_UNOWNED("plots.visit.unowned", "static.permissions"),
     PERMISSION_VISIT_OWNED("plots.visit.owned", "static.permissions"),
     PERMISSION_SHARED("plots.visit.shared", "static.permissions"),
@@ -165,6 +167,7 @@ public enum C {
      */
     CONSOLE_JAVA_OUTDATED("&cYour version of java is outdated. It is highly recommended that you update to Java 8 as it increases performance "
             + "and security. %s0 will require Java 8 in a future update.", "static.console"),
+
     /*
      * Confirm
      */
@@ -526,6 +529,7 @@ public enum C {
     DEBUG_HEADER("$1Debug Information&-", "Debug"),
     DEBUG_SECTION("$2>> $1&l%val%", "Debug"),
     DEBUG_LINE("$2>> $1%var%$2:$1 %val%&-", "Debug"),
+    REQUIRES_UNMERGED("$2The plot cannot be merged", "Debug"),
     /*
      * Invalid
      */
@@ -690,7 +694,15 @@ public enum C {
      * Set Owner
      */
     SET_OWNER("$4You successfully set the plot owner", "Owner"),
+    SET_OWNER_CANCELLED("$2The setowner action was cancelled", "Owner"),
     NOW_OWNER("$4You are now owner of plot %s", "Owner"),
+    /*
+     * Signs
+     */
+    OWNER_SIGN_LINE_1("$1ID: $1%id%", "Signs"),
+    OWNER_SIGN_LINE_2("$1Owner:", "Signs"),
+    OWNER_SIGN_LINE_3("$2%plr%", "Signs"),
+    OWNER_SIGN_LINE_4("$3Claimed", "Signs"),
     /*
      * Help
      */

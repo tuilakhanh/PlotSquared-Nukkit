@@ -11,24 +11,12 @@ import com.intellectualcrafters.plot.object.PlotMessage;
 import com.intellectualcrafters.plot.object.PlotPlayer;
 import com.intellectualcrafters.plot.object.Rating;
 import com.intellectualcrafters.plot.object.RunnableVal3;
-import com.intellectualcrafters.plot.util.EconHandler;
+import com.intellectualcrafters.plot.util.*;
 import com.intellectualcrafters.plot.util.expiry.ExpireManager;
-import com.intellectualcrafters.plot.util.MainUtil;
-import com.intellectualcrafters.plot.util.MathMan;
-import com.intellectualcrafters.plot.util.Permissions;
-import com.intellectualcrafters.plot.util.StringComparison;
-import com.intellectualcrafters.plot.util.StringMan;
-import com.intellectualcrafters.plot.util.UUIDHandler;
 import com.plotsquared.general.commands.CommandDeclaration;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.UUID;
 
 @CommandDeclaration(
         command = "list",
@@ -41,7 +29,7 @@ public class ListCmd extends SubCommand {
 
     private String[] getArgumentList(PlotPlayer player) {
         List<String> args = new ArrayList<>();
-        if (EconHandler.manager != null && Permissions.hasPermission(player, C.PERMISSION_LIST_FORSALE)) {
+        if (EconHandler.getEconHandler() != null && Permissions.hasPermission(player, C.PERMISSION_LIST_FORSALE)) {
             args.add("forsale");
         }
         if (Permissions.hasPermission(player, C.PERMISSION_LIST_MINE)) {
@@ -240,7 +228,7 @@ public class ListCmd extends SubCommand {
                     MainUtil.sendMessage(player, C.NO_PERMISSION, C.PERMISSION_LIST_FORSALE);
                     return false;
                 }
-                if (EconHandler.manager == null) {
+                if (EconHandler.getEconHandler() == null) {
                     break;
                 }
                 plots = new ArrayList<>();

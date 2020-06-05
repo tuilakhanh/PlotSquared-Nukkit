@@ -9,6 +9,7 @@ import com.intellectualcrafters.plot.util.TaskManager;
 import com.intellectualcrafters.plot.util.UUIDHandlerImplementation;
 import com.intellectualcrafters.plot.util.expiry.ExpireManager;
 import com.intellectualcrafters.plot.uuid.UUIDWrapper;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.UUID;
@@ -46,6 +47,7 @@ public class FileUUIDHandler extends UUIDHandlerImplementation {
                     whenDone.run();
                 }
             }
+
         });
         return true;
     }
@@ -58,6 +60,6 @@ public class FileUUIDHandler extends UUIDHandlerImplementation {
                 ifFetch.value = FileUUIDHandler.this.uuidWrapper.getUUID(name);
                 TaskManager.runTask(ifFetch);
             }
-        });
+    });
     }
 }

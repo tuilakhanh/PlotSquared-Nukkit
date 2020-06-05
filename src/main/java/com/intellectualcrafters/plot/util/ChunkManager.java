@@ -9,6 +9,7 @@ import com.intellectualcrafters.plot.object.RunnableVal;
 import com.intellectualcrafters.plot.util.block.GlobalBlockQueue;
 import com.intellectualcrafters.plot.util.block.LocalBlockQueue;
 import com.intellectualcrafters.plot.util.block.ScopedLocalBlockQueue;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,7 +17,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class ChunkManager {
-    
+
     public static ChunkManager manager = null;
     private static RunnableVal<ScopedLocalBlockQueue> CURRENT_FORCE_CHUNK;
     private static RunnableVal<ScopedLocalBlockQueue> CURRENT_ADD_CHUNK;
@@ -26,7 +27,7 @@ public abstract class ChunkManager {
         int z = location.getZ() >> 9;
         return new ChunkLoc(x, z);
     }
-    
+
     public static void setChunkInPlotArea(RunnableVal<ScopedLocalBlockQueue> force, RunnableVal<ScopedLocalBlockQueue> add, String world, ChunkLoc loc) {
         LocalBlockQueue queue = GlobalBlockQueue.IMP.getNewQueue(world, false);
         if (PS.get().isAugmented(world)) {
@@ -50,7 +51,7 @@ public abstract class ChunkManager {
             CURRENT_ADD_CHUNK = null;
         }
     }
-    
+
     public static boolean preProcessChunk(ScopedLocalBlockQueue queue) {
         if (CURRENT_FORCE_CHUNK != null) {
             CURRENT_FORCE_CHUNK.run(queue);
@@ -59,7 +60,7 @@ public abstract class ChunkManager {
         }
         return false;
     }
-    
+
     public static boolean postProcessChunk(ScopedLocalBlockQueue queue) {
         if (CURRENT_ADD_CHUNK != null) {
             CURRENT_ADD_CHUNK.run(queue);
@@ -97,7 +98,7 @@ public abstract class ChunkManager {
                     }
                 }
                 TaskManager.objectTask(chunks, new RunnableVal<ChunkLoc>() {
-                    
+
                     @Override
                     public void run(ChunkLoc value) {
                         if (manager.loadChunk(world, value, false)) {
@@ -144,7 +145,7 @@ public abstract class ChunkManager {
         final int tcx = p2x >> 4;
         final int tcz = p2z >> 4;
         final ArrayList<ChunkLoc> chunks = new ArrayList<>();
-        
+
         for (int x = bcx; x <= tcx; x++) {
             for (int z = bcz; z <= tcz; z++) {
                 chunks.add(new ChunkLoc(x, z));
@@ -189,7 +190,7 @@ public abstract class ChunkManager {
             }
         });
     }
-    
+
     /**
      * 0 = Entity
      * 1 = Animal
@@ -231,7 +232,7 @@ public abstract class ChunkManager {
     public void deleteRegionFiles(String world, Collection<ChunkLoc> chunks) {
         deleteRegionFiles(world, chunks, null);
     }
-    
+
     public void deleteRegionFiles(final String world, final Collection<ChunkLoc> chunks, final Runnable whenDone) {
         TaskManager.runTaskAsync(new Runnable() {
             @Override
@@ -248,7 +249,7 @@ public abstract class ChunkManager {
             }
         });
     }
-    
+
     public Plot hasPlot(String world, ChunkLoc chunk) {
         int x1 = chunk.x << 4;
         int z1 = chunk.z << 4;
@@ -266,12 +267,12 @@ public abstract class ChunkManager {
         }
         return null;
     }
-    
+
     /**
      * Copy a region to a new location (in the same world)
      */
     public abstract boolean copyRegion(Location pos1, Location pos2, Location newPos, Runnable whenDone);
-    
+
     /**
      * Assumptions:<br>
      *  - pos1 and pos2 are in the same plot<br>
