@@ -11,7 +11,7 @@ public abstract class AbstractTitle {
             return;
         }
         if (TITLE_CLASS != null && !player.getAttribute("disabletitles")) {
-            TITLE_CLASS.sendTitle(player, head, sub, 1, 2, 1);
+            TITLE_CLASS.sendTitle(player, head, sub, 1, 15, 1);
         }
     }
 
