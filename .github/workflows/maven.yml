@@ -35,4 +35,4 @@ jobs:
         if: success()
         with:
           name: PlotSquared
-          path: target/PlotSquared-*.jar
+          path: target/PlotSquared-3.5.1.jar
