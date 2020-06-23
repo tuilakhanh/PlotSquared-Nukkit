@@ -9,7 +9,6 @@ import com.intellectualcrafters.plot.flag.Flag;
 import com.intellectualcrafters.plot.generator.ClassicPlotWorld;
 import com.intellectualcrafters.plot.object.*;
 import com.intellectualcrafters.plot.util.block.LocalBlockQueue;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.net.URL;
@@ -456,7 +455,7 @@ public abstract class SchematicHandler {
         return null;
     }
 
-    public Schematic getSchematic(@NotNull InputStream is) {
+    public Schematic getSchematic(InputStream is) {
         try {
             NBTInputStream stream = new NBTInputStream(new GZIPInputStream(is));
             CompoundTag tag = (CompoundTag) stream.readTag(1073741824);
