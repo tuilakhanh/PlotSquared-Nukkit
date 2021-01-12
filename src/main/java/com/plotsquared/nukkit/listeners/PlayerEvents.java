@@ -27,6 +27,8 @@ import cn.nukkit.event.inventory.InventoryCloseEvent;
 import cn.nukkit.event.player.*;
 import cn.nukkit.event.potion.PotionCollideEvent;
 import cn.nukkit.event.redstone.RedstoneUpdateEvent;
+import cn.nukkit.item.Item;
+import cn.nukkit.item.ItemEdible;
 import cn.nukkit.metadata.MetadataValue;
 import cn.nukkit.plugin.Plugin;
 import com.google.common.base.Optional;
@@ -781,6 +783,10 @@ public class PlayerEvents extends PlotListener implements Listener {
             case RIGHT_CLICK_AIR: {
                 Plot plot = pp.getCurrentPlot();
                 if (plot == null || !plot.isAdded(pp.getUUID())) {
+                    Item item = event.getItem();
+                    if(event.getAction().equals(PlayerInteractEvent.Action.RIGHT_CLICK_AIR) && item != null && (item instanceof ItemEdible)){
+                        return;
+                    }
                     if (plot == null) {
                         if (Permissions.hasPermission(pp, C.PERMISSION_ADMIN_INTERACT_ROAD.s(), true)) {
                             return;
